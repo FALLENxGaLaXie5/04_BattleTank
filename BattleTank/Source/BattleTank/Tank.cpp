@@ -3,6 +3,7 @@
 #include "Tank.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
 #include "TankAimingComponent.h"
 
 
@@ -19,6 +20,7 @@ ATank::ATank()
 void ATank::SetBarrelReference(UTankBarrel * barrelToSet)
 {
 	TankAimingComponent->SetBarrelReference(barrelToSet);
+	barrel = barrelToSet;
 }
 
 void ATank::SetTurretReference(UTankTurret * turretToSet)
@@ -28,7 +30,16 @@ void ATank::SetTurretReference(UTankTurret * turretToSet)
 
 void ATank::Fire()
 {
+	bool isReloaded = (FPlatformTime::Seconds() - lastfireTime) > reloadTimeInSeconds;
 	UE_LOG(LogTemp, Warning, TEXT("BOOOOOOM BITCHHHH"));
+	if (barrel && isReloaded)
+	{
+		// spawn a projectile at the socket location of the barrel
+		auto projectile = GetWorld()->SpawnActor<AProjectile>(projectileBP, barrel->GetSocketLocation(FName("Projectile")), barrel->GetSocketRotation(FName("Projectile")));
+		projectile->LaunchProjectile(launchSpeed);
+		lastfireTime = FPlatformTime::Seconds();
+	}
+	
 }
 
 // Called when the game starts or when spawned
