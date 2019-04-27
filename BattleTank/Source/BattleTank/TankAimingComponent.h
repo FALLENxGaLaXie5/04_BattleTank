@@ -39,7 +39,7 @@ protected:
 	EFiringStatus firingState = EFiringStatus::Reloading;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	int ammoCount = 3;
+	int32 ammoCount = 3;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		TSubclassOf<AProjectile> projectileBP;
@@ -63,7 +63,7 @@ public:
 	EFiringStatus GetFiringState() const;
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
-	int GetRoundsLeft() const;
+	int32 GetRoundsLeft() const;
 
 private:
 	// Sets default values for this component's properties
