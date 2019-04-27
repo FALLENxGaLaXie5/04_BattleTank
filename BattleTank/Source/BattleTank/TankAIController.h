@@ -20,8 +20,10 @@ public:
 	void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-
-private:
+protected:
 	//how close the AI Tank can get
-	float acceptanceRadius = 3000;	
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		float acceptanceRadius = 6000;
+private:
+	
 };

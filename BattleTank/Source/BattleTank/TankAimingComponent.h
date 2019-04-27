@@ -16,7 +16,8 @@ enum class EFiringStatus : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	OutOfAmmo
 };
 
  // Forward Declaration
@@ -37,6 +38,16 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	EFiringStatus firingState = EFiringStatus::Reloading;
 
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	int ammoCount = 3;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		TSubclassOf<AProjectile> projectileBP;
+
+	UPROPERTY(EditAnywhere, Category = "Firing")
+		float launchSpeed = 100000;
+	UPROPERTY(EditDefaultsOnly, Category = "Firing")
+		float reloadTimeInSeconds = 3;
 public:	
 
 	// Called when the game starts
@@ -49,13 +60,16 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
 		void Fire();
+	EFiringStatus GetFiringState() const;
+
+	UFUNCTION(BlueprintCallable, Category = Firing)
+	int GetRoundsLeft() const;
 
 private:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	TSubclassOf<AProjectile> projectileBP;
+	
 
 	UTankBarrel* barrel = nullptr;
 	UTankTurret* turret = nullptr;
@@ -68,10 +82,7 @@ private:
 
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
-	UPROPERTY(EditAnywhere, Category = Firing)
-	float launchSpeed = 100000;
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float reloadTimeInSeconds = 3;
+	
 
 	double lastfireTime = 0;
 };

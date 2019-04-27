@@ -27,11 +27,10 @@ void ATankPlayerController::AimTowardsCrosshair()
 	if (!GetPawn()) { return; }// e.g. if not possessing
 	auto aimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(aimingComponent)) { return; };
-
 	FVector hitLocation = FVector(0); //out parameter
-	if (GetSightRayHitLocation(hitLocation))
+	bool bGotHitLocation = GetSightRayHitLocation(hitLocation);
+	if (bGotHitLocation)
 	{
-
 		aimingComponent->AimAt(hitLocation);
 		//get world location if linetrace through crosshair
 		// if it hits the landscape
@@ -54,9 +53,9 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& hitLocation) const
 	if (GetLookDirection(screenLocation, lookDirection))
 	{
 		// line-trace along that look direction, and see what we hit (up to max range)
-		GetLookVectorHitLocation(lookDirection, hitLocation);
+		return GetLookVectorHitLocation(lookDirection, hitLocation);
 	}
-	return true;
+	return false;
 }
 
 bool ATankPlayerController::GetLookDirection(FVector2D screenLocation, FVector& lookDirection) const
